@@ -1,10 +1,15 @@
-
+import { AppBar, Typography } from '@mui/material';
 
 function Header(props) {
-
   return (
-    <header>Header</header>
-  )
+    <AppBar
+      sx={{
+        p: '20px',
+      }}
+    >
+      <Typography>My Coin ETH</Typography>
+    </AppBar>
+  );
 }
 
 export default Header;
