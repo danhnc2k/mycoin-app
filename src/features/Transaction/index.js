@@ -5,7 +5,7 @@ import MainPage from './pages/Main';
 function Transaction(props) {
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
+      <Route index element={<MainPage />} />
     </Routes>
   );
 }

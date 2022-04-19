@@ -1,12 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import { Button, Stack } from '@mui/material';
 
 function MainPage(props) {
+  const navigate = useNavigate();
+
   const handleCreateWallet = (e) => {
-    console.log('create wallet');
+    navigate('create-wallet');
   };
 
   const handleImportWallet = (e) => {
-    console.log('import wallet');
+    navigate('import-wallet');
   };
 
   return (
