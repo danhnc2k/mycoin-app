@@ -11,13 +11,16 @@ const initialWalletState = {
   currentAccount: null,
 };
 
-export const getWalletBalance = createAsyncThunk(
-  'wallet/getWalletBalance',
-  async (address, network) => {
+export const updateBalances = createAsyncThunk(
+  'wallet/updateBalances',
+  async (addressList, network) => {
     const provider = getProviderFromNetwork(network);
-    const balance = await provider.getBalance(address);
-    console.log('debug balance: ', balance);
-    return formatEther(balance);
+    const result = [];
+    for (const address of addressList) {
+      const balance = await provider.getBalance(address);
+      result.push(formatEther(balance));
+    }
+    return result;
   }
 );
 
@@ -35,7 +38,7 @@ const wallet = createSlice({
       state.isConnected = true;
     },
     addAddress: (state, action) => {
-      const mnemonic = state.wallet.mnemonic;
+      const mnemonic = state.mnemonic;
       const addressIndex = state.accountList.length;
       const account = getWalletFromMnemonic(mnemonic, DERIVATION_PATH + addressIndex);
       account.balance = '0';
@@ -49,14 +52,18 @@ const wallet = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getWalletBalance.fulfilled, (state, action) => {
-      const account = { ...state.currentAccount };
-      account.balance = action.payload;
-      state.currentAccount = account;
+    builder.addCase(updateBalances.fulfilled, (state, action) => {
+      const balanceList = action.payload;
+      const accountList = [];
+      state.accountList.forEach((account, index) => {
+        const newAccount = { ...account, balance: balanceList[index] };
+        accountList.push(newAccount);
+      });
+      state.accountList = accountList;
     });
   },
 });
 
 const { reducer, actions } = wallet;
-export const { createNewAccount, addAddress, updateMnemonic } = actions;
+export const { createNewAccount, addAddress, updateMnemonic, updateBalance } = actions;
 export default reducer;
