@@ -2,12 +2,22 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { getWalletBalance } from '../../walletSlice';
 
 function MainPage(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isConnected = useSelector((state) => state.wallet.isConnected);
   const currentAccount = useSelector((state) => state.wallet.currentAccount);
+  const currentNetwork = useSelector((state) => state.network.currentNetwork);
+
+  useEffect(() => {
+    if (currentAccount) {
+      const getBalanceAction = getWalletBalance(currentAccount.address, currentNetwork);
+      dispatch(getBalanceAction);
+      console.log(currentAccount);
+    }
+  }, []);
 
   const handleCreateWallet = (e) => {
     navigate('create-wallet');
@@ -21,6 +31,7 @@ function MainPage(props) {
     return (
       <Stack direction="row" justifyContent="center" spacing={10}>
         <Typography>{currentAccount.address}</Typography>
+        <Typography>{currentAccount.balance}</Typography>
       </Stack>
     );
   } else {

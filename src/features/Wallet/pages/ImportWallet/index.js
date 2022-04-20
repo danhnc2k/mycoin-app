@@ -1,14 +1,22 @@
-import { useState } from 'react';
 import { Button, Stack, Typography, TextField } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { updateMnemonic, createNewAccount } from '../../walletSlice';
 
 function ImportWalletPage(props) {
-  const [mnemonic, setMnemonic] = useState('');
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const mnemonic = useSelector((state) => state.wallet.mnemonic);
 
   const handleMnemonicChange = (e) => {
-    setMnemonic(e.target.value);
+    const updateMnemonicAction = updateMnemonic(e.target.value);
+    dispatch(updateMnemonicAction);
   };
+
   const handleImportWallet = (e) => {
-    console.log('handleImportWallet');
+    const createNewAccountAction = createNewAccount(mnemonic);
+    dispatch(createNewAccountAction);
+    navigate('/');
   };
 
   return (
@@ -18,7 +26,6 @@ function ImportWalletPage(props) {
         required
         id="outlined-required"
         label="Required"
-        defaultValue="Hello World"
         value={mnemonic}
         onChange={handleMnemonicChange}
       />
