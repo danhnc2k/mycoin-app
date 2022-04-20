@@ -4,7 +4,6 @@ export const getProviderFromNetwork = (network) => {
   switch (network) {
     case 'homestead':
     case 'ropsten':
-    case 'rinkeby':
     case 'kovan':
     case 'goerli':
       return new providers.EtherscanProvider(network);

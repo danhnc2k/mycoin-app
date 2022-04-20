@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   TableContainer,
   Table,
@@ -8,12 +10,17 @@ import {
   Paper,
   Button,
 } from '@mui/material';
+import { setCurrentAccount } from '../../walletSlice';
 
 function AccountTable(props) {
   const { accountList } = props;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleGoToTransactionPage = (accountIndex) => {
-    console.log('handleGoToTransactionPage', accountIndex);
+    const setCurrentAccountAction = setCurrentAccount(accountList[accountIndex]);
+    dispatch(setCurrentAccountAction);
+    navigate(`/transaction/${accountList[accountIndex].address}`);
   };
 
   return (

@@ -30,7 +30,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/*" element={<Wallet />} />
-            <Route path="/transaction/*" element={<Transaction />} />
+            <Route path="/transaction/:address/*" element={<Transaction />} />
           </Routes>
         </BrowserRouter>
       </Container>

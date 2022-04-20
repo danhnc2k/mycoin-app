@@ -13,7 +13,7 @@ const initialWalletState = {
 
 export const updateBalances = createAsyncThunk(
   'wallet/updateBalances',
-  async (addressList, network) => {
+  async ({ addressList, network }) => {
     const provider = getProviderFromNetwork(network);
     const result = [];
     for (const address of addressList) {
@@ -31,8 +31,6 @@ const wallet = createSlice({
     createNewAccount: (state, action) => {
       const mnemonic = action.payload;
       const account = getWalletFromMnemonic(mnemonic);
-      account.balance = '0';
-      state.currentAccount = account;
       state.accountList.push(account);
       state.mnemonic = mnemonic;
       state.isConnected = true;
@@ -42,7 +40,6 @@ const wallet = createSlice({
       const addressIndex = state.accountList.length;
       const account = getWalletFromMnemonic(mnemonic, DERIVATION_PATH + addressIndex);
       account.balance = '0';
-      state.currentAccount = account;
       state.accountList.push(account);
       state.isConnected = true;
     },
@@ -50,14 +47,17 @@ const wallet = createSlice({
       const newMnemonic = action.payload;
       state.mnemonic = newMnemonic;
     },
+    setCurrentAccount: (state, action) => {
+      state.currentAccount = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(updateBalances.fulfilled, (state, action) => {
       const balanceList = action.payload;
       const accountList = [];
       state.accountList.forEach((account, index) => {
-        const newAccount = { ...account, balance: balanceList[index] };
-        accountList.push(newAccount);
+        account.balance = balanceList[index];
+        accountList.push(account);
       });
       state.accountList = accountList;
     });
@@ -65,5 +65,5 @@ const wallet = createSlice({
 });
 
 const { reducer, actions } = wallet;
-export const { createNewAccount, addAddress, updateMnemonic, updateBalance } = actions;
+export const { createNewAccount, addAddress, updateMnemonic, setCurrentAccount } = actions;
 export default reducer;

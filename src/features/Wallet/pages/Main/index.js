@@ -13,9 +13,8 @@ function MainPage(props) {
   const accountList = useSelector((state) => state.wallet.accountList);
 
   useEffect(() => {
-    console.log('run effect');
     handleCheckBalances();
-  }, [accountList]);
+  }, []);
 
   const handleCreateWallet = (e) => {
     navigate('create-wallet');
@@ -33,8 +32,11 @@ function MainPage(props) {
   const handleCheckBalances = (e) => {
     if (accountList && accountList.length > 0) {
       const addressList = accountList.map((account) => account.address);
-      const getBalanceAction = updateBalances(addressList, currentNetwork);
-      dispatch(getBalanceAction);
+      const updateBalanceAction = updateBalances({
+        addressList: addressList,
+        network: currentNetwork,
+      });
+      dispatch(updateBalanceAction);
     }
   };
 
