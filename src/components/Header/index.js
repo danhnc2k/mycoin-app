@@ -1,4 +1,6 @@
-import { AppBar, Typography } from '@mui/material';
+import { AppBar, Typography, Stack } from '@mui/material';
+
+import Network from '../../features/Network';
 
 function Header(props) {
   return (
@@ -7,7 +9,10 @@ function Header(props) {
         p: '20px',
       }}
     >
-      <Typography>My Coin ETH</Typography>
+      <Stack direction="row" justifyContent="space-between" spacing={10}>
+        <Typography>My Coin ETH</Typography>
+        <Network />
+      </Stack>
     </AppBar>
   );
 }

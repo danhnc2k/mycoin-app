@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
 import { Button, Stack, Typography } from '@mui/material';
 
 import { generateRandomMnemonic } from '../../../../util/bip39';
+import { createNewAccount } from '../../walletSlice';
 
 function CreateWalletPage(props) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [mnemonic, setMnemonic] = useState('');
 
   useEffect(() => {
@@ -11,7 +17,9 @@ function CreateWalletPage(props) {
   }, []);
 
   const handleCreateWallet = (e) => {
-    console.log('handleCreateWallet');
+    const createNewAccountAction = createNewAccount(mnemonic);
+    dispatch(createNewAccountAction);
+    navigate('/');
   };
 
   const handleGenerateNewMnemonic = (e) => {
