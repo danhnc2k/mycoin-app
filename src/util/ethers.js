@@ -3,9 +3,9 @@ import { Wallet, providers, utils } from 'ethers';
 export const getProviderFromNetwork = (network) => {
   switch (network) {
     case 'homestead':
-    case 'ropsten':
-    case 'kovan':
     case 'goerli':
+    case 'kovan':
+    case 'ropsten':
       return new providers.EtherscanProvider(network);
     default:
       return new providers.EtherscanProvider('rinkeby');

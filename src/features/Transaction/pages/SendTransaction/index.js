@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Stack, TextField, Button } from '@mui/material';
+import { Stack, TextField, Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import { getProviderFromNetwork, parseEther } from '../../../../util/ethers';
 import { useSelector } from 'react-redux';
@@ -24,10 +24,14 @@ function SendTransactionPage(props) {
       value: amountToSend,
     };
     setLoading(true);
-    await currentAccount.signTransaction(tx);
-    const transaction = await walletSigner.sendTransaction(tx);
+    try {
+      await currentAccount.signTransaction(tx);
+      const transaction = await walletSigner.sendTransaction(tx);
+      console.log('transaction completed: ', transaction);
+    } catch (err) {
+      console.log('transaction failed: ', err);
+    }
     setLoading(false);
-    console.log('transaction finished: ', transaction);
   };
 
   const handleToAddressChange = (e) => {
@@ -40,6 +44,7 @@ function SendTransactionPage(props) {
 
   return (
     <Stack direction="column" justifyContent="center" spacing={10}>
+      <Typography>{`Your current balance: ${currentAccount.balance} Ether`}</Typography>
       <TextField name="from" label="From" value={fromAddress} variant="outlined" disabled />
       <TextField
         name="to"
@@ -57,7 +62,7 @@ function SendTransactionPage(props) {
         type="number"
       />
       <Button
-        color="secondary"
+        color="primary"
         onClick={handleSendTransaction}
         disabled={loading}
         variant="contained"
