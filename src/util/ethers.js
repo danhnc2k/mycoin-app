@@ -3,6 +3,7 @@ import { Wallet, providers, utils } from 'ethers';
 export const getProviderFromNetwork = (network) => {
   switch (network) {
     case 'homestead':
+      return new providers.EtherscanProvider();
     case 'goerli':
     case 'kovan':
     case 'ropsten':
@@ -14,6 +15,11 @@ export const getProviderFromNetwork = (network) => {
 
 export const getWalletFromMnemonic = (mnemonic, path) => {
   const wallet = Wallet.fromMnemonic(mnemonic, path);
+  return wallet;
+};
+
+export const getWalletFromEncryptedJson = async (json, password) => {
+  const wallet = await Wallet.fromEncryptedJson(json, password);
   return wallet;
 };
 

@@ -1,25 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Stack, TextField, Typography } from '@mui/material';
 
 import { generateRandomMnemonic } from '../../../../util/bip39';
-import { createNewAccount } from '../../walletSlice';
+import { createNewAccount, updatePasswordToEncrypt } from '../../walletSlice';
 
 function CreateWalletPage(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [mnemonic, setMnemonic] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     randomNewMnemonic();
   }, []);
 
-  const handleCreateWallet = (e) => {
+  const handleCreateWallet = async (e) => {
     const createNewAccountAction = createNewAccount(mnemonic);
     dispatch(createNewAccountAction);
+    const updatePasswordAction = updatePasswordToEncrypt(password);
+    dispatch(updatePasswordAction);
     navigate('/');
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
   };
 
   const handleGenerateNewMnemonic = (e) => {
@@ -38,7 +45,15 @@ function CreateWalletPage(props) {
       <Button variant="outlined" onClick={handleGenerateNewMnemonic}>
         Generate New Mnemonic
       </Button>
-      <Typography>Create wallet using this Mnemonic</Typography>
+      <Typography>Enter password to save your session on this device</Typography>
+      <TextField
+        required
+        id="outlined-required-password"
+        label="Required"
+        value={password}
+        onChange={handlePasswordChange}
+      />
+      <Typography>Create wallet using Mnemonic above</Typography>
       <Button variant="contained" onClick={handleCreateWallet}>
         Create Wallet
       </Button>

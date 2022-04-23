@@ -10,17 +10,19 @@ import {
   Paper,
   Button,
 } from '@mui/material';
-import { setCurrentAccount } from '../../walletSlice';
+import { updateCurrentAccount, updateCurrentBalance } from '../../walletSlice';
 
 function AccountTable(props) {
-  const { accountList } = props;
+  const { accountList, balanceList } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleGoToTransactionPage = (accountIndex) => {
-    const setCurrentAccountAction = setCurrentAccount(accountList[accountIndex]);
-    dispatch(setCurrentAccountAction);
-    navigate(`/transaction/${accountList[accountIndex].address}`);
+  const handleGoToTransactionPage = (index) => {
+    const updateCurrentAccountAction = updateCurrentAccount(accountList[index]);
+    dispatch(updateCurrentAccountAction);
+    const updateCurrentBalanceAction = updateCurrentBalance(balanceList[index]);
+    dispatch(updateCurrentBalanceAction);
+    navigate(`/transaction/${accountList[index].address}`);
   };
 
   return (
@@ -39,7 +41,7 @@ function AccountTable(props) {
               <TableCell component="th" scope="row">
                 {account.address}
               </TableCell>
-              <TableCell align="right">{account.balance}</TableCell>
+              <TableCell align="right">{balanceList[index]}</TableCell>
               <TableCell align="right">
                 <Button onClick={() => handleGoToTransactionPage(index)}>Go To Detail page</Button>
               </TableCell>

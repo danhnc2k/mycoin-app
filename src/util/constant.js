@@ -1,4 +1,5 @@
 export const DERIVATION_PATH = "m/44'/60'/0'/0/";
+
 export const NETWORK_LIST = [
   {
     name: 'Rinkeby',
@@ -21,3 +22,9 @@ export const NETWORK_LIST = [
     value: 'goerli',
   },
 ];
+
+export const WALLET_STATUS = {
+  notConnected: 'NOT_CONNECTED',
+  locked: 'LOCKED',
+  connected: 'CONNECTED',
+};

@@ -1,14 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { getWalletFromMnemonic, getProviderFromNetwork } from '../../util/ethers';
-import { DERIVATION_PATH } from '../../util/constant';
+import { DERIVATION_PATH, WALLET_STATUS } from '../../util/constant';
 import { formatEther } from 'ethers/lib/utils';
 
 const initialWalletState = {
-  isConnected: false,
+  status: WALLET_STATUS.notConnected, // has 3 states: 'NOT_CONNECTED', 'LOCKED', 'CONNECTED'
   mnemonic: '',
   accountList: [],
+  balanceList: [],
   currentAccount: null,
+  currentBalance: '0',
+  passwordToEncrypt: '',
 };
 
 export const updateBalances = createAsyncThunk(
@@ -33,37 +36,55 @@ const wallet = createSlice({
       const account = getWalletFromMnemonic(mnemonic);
       state.accountList.push(account);
       state.mnemonic = mnemonic;
-      state.isConnected = true;
+      state.status = WALLET_STATUS.connected;
     },
     addAddress: (state, action) => {
       const mnemonic = state.mnemonic;
       const addressIndex = state.accountList.length;
       const account = getWalletFromMnemonic(mnemonic, DERIVATION_PATH + addressIndex);
-      account.balance = '0';
       state.accountList.push(account);
-      state.isConnected = true;
+      state.status = WALLET_STATUS.connected;
+    },
+    updateAccountList: (state, action) => {
+      state.accountList = action.payload;
+      state.status = WALLET_STATUS.connected;
+    },
+    updatePasswordToEncrypt: (state, action) => {
+      state.passwordToEncrypt = action.payload;
     },
     updateMnemonic: (state, action) => {
-      const newMnemonic = action.payload;
-      state.mnemonic = newMnemonic;
+      state.mnemonic = action.payload;
     },
-    setCurrentAccount: (state, action) => {
+    updateStatus: (state, action) => {
+      state.status = action.payload;
+    },
+    updateCurrentAccount: (state, action) => {
       state.currentAccount = action.payload;
+    },
+    updateCurrentBalance: (state, action) => {
+      state.currentBalance = action.payload;
+    },
+    removeWallet: (state, action) => {
+      state = { ...initialWalletState };
     },
   },
   extraReducers: (builder) => {
     builder.addCase(updateBalances.fulfilled, (state, action) => {
-      const balanceList = action.payload;
-      const accountList = [];
-      state.accountList.forEach((account, index) => {
-        account.balance = balanceList[index];
-        accountList.push(account);
-      });
-      state.accountList = accountList;
+      state.balanceList = action.payload;
     });
   },
 });
 
 const { reducer, actions } = wallet;
-export const { createNewAccount, addAddress, updateMnemonic, setCurrentAccount } = actions;
+export const {
+  createNewAccount,
+  addAddress,
+  updateAccountList,
+  updatePasswordToEncrypt,
+  updateMnemonic,
+  updateStatus,
+  updateCurrentAccount,
+  updateCurrentBalance,
+  removeWallet,
+} = actions;
 export default reducer;

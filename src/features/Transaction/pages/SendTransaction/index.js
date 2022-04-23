@@ -13,6 +13,7 @@ function SendTransactionPage(props) {
   const fromAddress = params.address;
 
   const currentAccount = useSelector((state) => state.wallet.currentAccount);
+  const currentBalance = useSelector((state) => state.wallet.currentBalance);
   const currentNetwork = useSelector((state) => state.network.currentNetwork);
   const provider = getProviderFromNetwork(currentNetwork);
 
@@ -44,7 +45,7 @@ function SendTransactionPage(props) {
 
   return (
     <Stack direction="column" justifyContent="center" spacing={10}>
-      <Typography>{`Your current balance: ${currentAccount.balance} Ether`}</Typography>
+      <Typography>{`Your current balance: ${currentBalance} Ether`}</Typography>
       <TextField name="from" label="From" value={fromAddress} variant="outlined" disabled />
       <TextField
         name="to"
