@@ -1,11 +1,15 @@
-import { Button, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+import { Button, Stack, Typography } from '@mui/material';
+
+import TransactionTable from '../../components/TransactionTable/TransactionTable';
+
 import { fetchTransactionList } from '../../../../api/transaction';
+
 import { formatEther } from '../../../../util/ethers';
 import { convertTimestampToDateTime } from '../../../../util/time';
-import TransactionTable from '../../components/TransactionTable/TransactionTable';
 
 function MainPage(props) {
   const navigate = useNavigate();
@@ -45,10 +49,16 @@ function MainPage(props) {
   return (
     <Stack direction="column" justifyContent="center" spacing={10}>
       <Button onClick={handleSendTransaction} variant="contained">
-        Send Transaction
+        Go to Send Transaction Page
       </Button>
-      <Typography>Transaction history</Typography>
-      <TransactionTable transactionList={transactionList} />
+      <Typography align="center" variant="h5">
+        Transaction history
+      </Typography>
+      {loading ? (
+        <Typography>Loading...</Typography>
+      ) : (
+        <TransactionTable transactionList={transactionList} />
+      )}
     </Stack>
   );
 }

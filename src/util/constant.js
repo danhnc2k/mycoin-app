@@ -28,3 +28,9 @@ export const WALLET_STATUS = {
   locked: 'LOCKED',
   connected: 'CONNECTED',
 };
+
+export const TRANSACTION_STATUS = {
+  start: 'START',
+  success: 'SUCCESS',
+  failed: 'FAILED',
+};

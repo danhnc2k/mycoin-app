@@ -24,7 +24,7 @@ function App() {
       <Container
         sx={{
           height: '100%',
-          pt: '10%',
+          py: '10%',
         }}
       >
         <BrowserRouter>

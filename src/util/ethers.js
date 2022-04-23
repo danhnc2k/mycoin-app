@@ -3,13 +3,12 @@ import { Wallet, providers, utils } from 'ethers';
 export const getProviderFromNetwork = (network) => {
   switch (network) {
     case 'homestead':
-      return new providers.EtherscanProvider();
     case 'goerli':
     case 'kovan':
     case 'ropsten':
-      return new providers.EtherscanProvider(network);
+      return new providers.EtherscanProvider(network, process.env.REACT_APP_API_KEY);
     default:
-      return new providers.EtherscanProvider('rinkeby');
+      return new providers.EtherscanProvider('rinkeby', process.env.REACT_APP_API_KEY);
   }
 };
 

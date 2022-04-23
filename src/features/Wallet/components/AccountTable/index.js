@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
 import {
   TableContainer,
   Table,
@@ -10,6 +11,7 @@ import {
   Paper,
   Button,
 } from '@mui/material';
+
 import { updateCurrentAccount, updateCurrentBalance } from '../../walletSlice';
 
 function AccountTable(props) {
@@ -41,8 +43,8 @@ function AccountTable(props) {
               <TableCell component="th" scope="row">
                 {account.address}
               </TableCell>
-              <TableCell align="right">{balanceList[index]}</TableCell>
-              <TableCell align="right">
+              <TableCell align="justify">{`${balanceList[index] || 'Loading...'} Ether`}</TableCell>
+              <TableCell align="justify">
                 <Button onClick={() => handleGoToTransactionPage(index)}>Go To Detail page</Button>
               </TableCell>
             </TableRow>

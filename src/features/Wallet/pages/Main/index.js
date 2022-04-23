@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Stack, ButtonGroup, TextField, Typography } from '@mui/material';
+import { Button, Stack, TextField, Typography } from '@mui/material';
 
 import {
   addAddress,
   removeWallet,
   updateAccountList,
   updateBalances,
+  updateMnemonic,
   updateStatus,
 } from '../../walletSlice';
 import AccountTable from '../../components/AccountTable';
@@ -40,7 +41,6 @@ function MainPage(props) {
     if (wallets.length) {
       const updateStatusAction = updateStatus(WALLET_STATUS.locked);
       dispatch(updateStatusAction);
-      handleCheckBalances();
     }
   }, []);
 
@@ -53,7 +53,7 @@ function MainPage(props) {
 
   //run to save account list to local storage if accountList change
   useEffect(() => {
-    if (accountList.length > 0) {
+    if (accountList.length > 0 && passwordToEncrypt !== '') {
       const saveSession = async () => {
         // encrypt wallet and save to local storage
         const encryptedWallets = [];
@@ -64,8 +64,8 @@ function MainPage(props) {
         saveEncryptedWalletsToLocalStorage(encryptedWallets);
       };
       saveSession();
-      handleCheckBalances();
     }
+    handleCheckBalances();
   }, [accountList]);
 
   //
@@ -85,6 +85,8 @@ function MainPage(props) {
       if (walletList.length) {
         const updateAccountListAction = updateAccountList(walletList);
         dispatch(updateAccountListAction);
+        const updateMnemonicAction = updateMnemonic(walletList[0].mnemonic.phrase);
+        dispatch(updateMnemonicAction);
       }
     } catch (err) {
       console.log('incorrect password', err);
@@ -107,8 +109,8 @@ function MainPage(props) {
   };
 
   const handleCheckBalances = (e) => {
+    //console.log('handle check balance: ', accountList, currentNetwork);
     if (accountList && accountList.length > 0) {
-      console.log('update balance: ', currentNetwork);
       const addressList = accountList.map((account) => account.address);
       const updateBalanceAction = updateBalances({
         addressList: addressList,
@@ -131,7 +133,7 @@ function MainPage(props) {
   if (status === 'LOCKED') {
     return (
       <Stack direction="column" justifyContent="center" spacing={10}>
-        <Typography>Enter password to unlock wallet</Typography>
+        <Typography variant="h6">Enter password to unlock wallet</Typography>
         <TextField
           required
           id="outlined-required"
@@ -139,29 +141,37 @@ function MainPage(props) {
           value={password}
           onChange={handlePasswordChange}
         />
-        {passwordError !== '' && <Typography>{passwordError}</Typography>}
-        <Button onClick={handleUnlockWallet}>Unlock Wallet</Button>
-        <Typography>Remove wallet from this device</Typography>
-        <Button onClick={handleRemoveWallet}>Remove Wallet</Button>
+        {passwordError !== '' && <Typography sx={{ color: 'red' }}>{passwordError}</Typography>}
+        <Button variant="contained" color="primary" onClick={handleUnlockWallet}>
+          Unlock Wallet
+        </Button>
+        <Typography variant="h6">Remove wallet from this device</Typography>
+        <Button variant="contained" color="secondary" onClick={handleRemoveWallet}>
+          Remove Wallet
+        </Button>
       </Stack>
     );
   } else if (status === 'CONNECTED') {
     return (
       <Stack direction="column" justifyContent="center" spacing={10}>
         <AccountTable accountList={accountList} balanceList={balanceList} />
-        <ButtonGroup variant="contained" aria-label="outlined primary button group">
-          <Button onClick={handleAddNewAddress}>Add new Address</Button>
-          <Button onClick={handleCheckBalances}>Check balances</Button>
-        </ButtonGroup>
+        <Stack direction="row" justifyContent="center" spacing={10}>
+          <Button variant="contained" color="secondary" onClick={handleAddNewAddress}>
+            Add new Address
+          </Button>
+          <Button variant="contained" color="secondary" onClick={handleCheckBalances}>
+            Check balances
+          </Button>
+        </Stack>
       </Stack>
     );
   } else {
     return (
       <Stack direction="row" justifyContent="center" spacing={10}>
-        <Button variant="contained" onClick={handleCreateWallet}>
+        <Button variant="contained" color="primary" onClick={handleCreateWallet}>
           Create Wallet
         </Button>
-        <Button variant="outlined" onClick={handleImportWallet}>
+        <Button variant="contained" color="secondary" onClick={handleImportWallet}>
           Import Wallet
         </Button>
       </Stack>

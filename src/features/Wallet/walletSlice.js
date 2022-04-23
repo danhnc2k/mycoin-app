@@ -65,7 +65,7 @@ const wallet = createSlice({
       state.currentBalance = action.payload;
     },
     removeWallet: (state, action) => {
-      state = { ...initialWalletState };
+      state = initialWalletState;
     },
   },
   extraReducers: (builder) => {

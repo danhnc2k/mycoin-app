@@ -1,5 +1,3 @@
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import {
   TableContainer,
   Table,
@@ -8,21 +6,10 @@ import {
   TableRow,
   TableCell,
   Paper,
-  Button,
 } from '@mui/material';
 
 function TransactionTable(props) {
   const { transactionList } = props;
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const handleGoToTransactionDetailPage = (index) => {
-    // const setCurrentAccountAction = setCurrentAccount(accountList[accountIndex]);
-    // dispatch(setCurrentAccountAction);
-    // navigate(`/transaction/${accountList[accountIndex].address}`);
-  };
-
-  console.log('tran list: ', transactionList);
 
   return (
     <TableContainer component={Paper}>
@@ -45,11 +32,7 @@ function TransactionTable(props) {
             </TableRow>
           ) : (
             transactionList.map((transaction, index) => (
-              <TableRow
-                key={index}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                onClick={() => handleGoToTransactionDetailPage(index)}
-              >
+              <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <TableCell component="th" scope="row">
                   {transaction.hash}
                 </TableCell>

@@ -1,8 +1,20 @@
-import { AppBar, Typography, Stack } from '@mui/material';
+import { AppBar, Typography, Stack, Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Network from '../../features/Network';
+import { removeWallet } from '../../features/Wallet/walletSlice';
+import { WALLET_STATUS } from '../../util/constant';
 
 function Header(props) {
+  const dispatch = useDispatch();
+  const status = useSelector((state) => state.wallet.status);
+
+  const handleLogout = (e) => {
+    const removeWalletAction = removeWallet();
+    dispatch(removeWalletAction);
+    window.location.reload();
+  };
+
   return (
     <AppBar
       sx={{
@@ -10,8 +22,15 @@ function Header(props) {
       }}
     >
       <Stack direction="row" justifyContent="space-between" spacing={10}>
-        <Typography>My Coin ETH</Typography>
+        <Typography sx={{ my: 'auto' }}>My Coin ETH</Typography>
         <Network />
+        <Button
+          variant="outline"
+          onClick={handleLogout}
+          disabled={status !== WALLET_STATUS.connected}
+        >
+          Logout
+        </Button>
       </Stack>
     </AppBar>
   );
