@@ -1,16 +1,20 @@
 export const convertTimestampToDateTime = (timestamp) => {
   const date = new Date(timestamp * 1000);
   return (
-    date.getDate() +
+    addZeroPrefix(date.getDate()) +
     '/' +
-    (date.getMonth() + 1) +
+    addZeroPrefix(date.getMonth() + 1) +
     '/' +
     date.getFullYear() +
     ' ' +
-    date.getHours() +
+    addZeroPrefix(date.getHours()) +
     ':' +
-    date.getMinutes() +
+    addZeroPrefix(date.getMinutes()) +
     ':' +
-    date.getSeconds()
+    addZeroPrefix(date.getSeconds())
   );
+};
+
+const addZeroPrefix = (number) => {
+  return number < 10 ? '0' + number : number;
 };

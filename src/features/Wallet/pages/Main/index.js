@@ -25,11 +25,13 @@ import { WALLET_STATUS } from '../../../../util/constant';
 function MainPage(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const status = useSelector((state) => state.wallet.status);
   const currentNetwork = useSelector((state) => state.network.currentNetwork);
   const accountList = useSelector((state) => state.wallet.accountList);
   const balanceList = useSelector((state) => state.wallet.balanceList);
   const passwordToEncrypt = useSelector((state) => state.wallet.passwordToEncrypt);
+
   const [password, setPassword] = useState('');
   const [encryptedWallets, setEncryptedWallets] = useState([]);
   const [passwordError, setPasswordError] = useState('');
@@ -138,6 +140,7 @@ function MainPage(props) {
           required
           id="outlined-required"
           label="Required"
+          type="password"
           value={password}
           onChange={handlePasswordChange}
         />
@@ -158,9 +161,6 @@ function MainPage(props) {
         <Stack direction="row" justifyContent="center" spacing={10}>
           <Button variant="contained" color="secondary" onClick={handleAddNewAddress}>
             Add new Address
-          </Button>
-          <Button variant="contained" color="secondary" onClick={handleCheckBalances}>
-            Check balances
           </Button>
         </Stack>
       </Stack>

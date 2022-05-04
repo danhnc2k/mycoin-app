@@ -31,7 +31,7 @@ function ImportWalletPage(props) {
 
   return (
     <Stack direction="column" justifyContent="center" spacing={10}>
-      <Typography>Enter your Mnemonic</Typography>
+      <Typography variant="h6">Enter your Mnemonic:</Typography>
       <TextField
         required
         id="outlined-required"
@@ -39,10 +39,11 @@ function ImportWalletPage(props) {
         value={mnemonic}
         onChange={handleMnemonicChange}
       />
-      <Typography>Enter password to save your session on this device</Typography>
+      <Typography variant="h6">Enter password to save your session on this device:</Typography>
       <TextField
         required
         id="outlined-required"
+        type="password"
         label="Required"
         value={password}
         onChange={handlePasswordChange}

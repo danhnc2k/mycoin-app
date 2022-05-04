@@ -12,7 +12,7 @@ function Header(props) {
   const handleLogout = (e) => {
     const removeWalletAction = removeWallet();
     dispatch(removeWalletAction);
-    window.location.reload();
+    window.location.replace('/');
   };
 
   return (
@@ -22,7 +22,7 @@ function Header(props) {
       }}
     >
       <Stack direction="row" justifyContent="space-between" spacing={10}>
-        <Typography sx={{ my: 'auto' }}>My Coin ETH</Typography>
+        <Typography sx={{ my: 'auto' }}>MyCoin Wallet</Typography>
         <Network />
         <Button
           variant="outline"

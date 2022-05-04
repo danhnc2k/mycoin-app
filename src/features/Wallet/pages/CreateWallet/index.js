@@ -10,19 +10,25 @@ import { createNewAccount, updatePasswordToEncrypt } from '../../walletSlice';
 function CreateWalletPage(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [mnemonic, setMnemonic] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   useEffect(() => {
     randomNewMnemonic();
   }, []);
 
   const handleCreateWallet = async (e) => {
-    const createNewAccountAction = createNewAccount(mnemonic);
-    dispatch(createNewAccountAction);
-    const updatePasswordAction = updatePasswordToEncrypt(password);
-    dispatch(updatePasswordAction);
-    navigate('/');
+    if (!password) {
+      setPasswordError('You must enter password');
+    } else {
+      const createNewAccountAction = createNewAccount(mnemonic);
+      dispatch(createNewAccountAction);
+      const updatePasswordAction = updatePasswordToEncrypt(password);
+      dispatch(updatePasswordAction);
+      navigate('/');
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -40,20 +46,24 @@ function CreateWalletPage(props) {
 
   return (
     <Stack direction="column" justifyContent="center" spacing={10}>
-      <Typography>Here is your random Mnemonic</Typography>
-      <Typography>{mnemonic}</Typography>
+      <Typography variant="h6">Here is your random Mnemonic:</Typography>
+      <Typography>
+        <b>{mnemonic}</b>
+      </Typography>
       <Button variant="outlined" onClick={handleGenerateNewMnemonic}>
         Generate New Mnemonic
       </Button>
-      <Typography>Enter password to save your session on this device</Typography>
+      <Typography variant="h6">Enter password to save your session on this device:</Typography>
       <TextField
         required
         id="outlined-required-password"
         label="Required"
+        type="password"
         value={password}
         onChange={handlePasswordChange}
       />
-      <Typography>Create wallet using Mnemonic above</Typography>
+      {passwordError !== '' && <Typography sx={{ color: 'red' }}>{passwordError}</Typography>}
+      <Typography variant="h6">Create wallet using Mnemonic above</Typography>
       <Button variant="contained" onClick={handleCreateWallet}>
         Create Wallet
       </Button>

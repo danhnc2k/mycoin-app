@@ -44,6 +44,9 @@ function SendTransactionPage(props) {
   const handleCancelTransaction = (e) => {
     navigate(-1);
   };
+  const handleGotoTransactionHistory = (e) => {
+    navigate(`/transaction/${fromAddress}`);
+  };
 
   const handleToAddressChange = (e) => {
     setToAddress(e.target.value);
@@ -65,7 +68,7 @@ function SendTransactionPage(props) {
             Transaction Failed
           </Typography>
         )}
-        <Button color="secondary" onClick={handleCancelTransaction} variant="contained">
+        <Button color="secondary" onClick={handleGotoTransactionHistory} variant="contained">
           Go to Transaction History Page
         </Button>
       </Stack>

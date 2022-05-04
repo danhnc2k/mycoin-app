@@ -19,19 +19,24 @@ function MainPage(props) {
   const [transactionList, setTransactionList] = useState([]);
 
   useEffect(() => {
-    const getTransactionList = async () => {
-      setLoading(true);
-      try {
-        const transactions = await fetchTransactionList(currentNetwork, currentAccount.address);
-        const formattedTransactions = formatTransactionList(transactions);
-        setTransactionList(formattedTransactions);
-      } catch (err) {
-        console.log('fetch transaction list failed: ', err);
-      }
-      setLoading(false);
+    const loadTransaction = async () => {
+      await getTransactionList();
     };
-    getTransactionList();
+    loadTransaction();
   }, [currentNetwork]);
+
+  const getTransactionList = async () => {
+    setLoading(true);
+    try {
+      const transactions = await fetchTransactionList(currentNetwork, currentAccount.address);
+      const formattedTransactions = formatTransactionList(transactions);
+      console.log('formatted trans: ', formattedTransactions);
+      setTransactionList(formattedTransactions);
+    } catch (err) {
+      console.log('fetch transaction list failed: ', err);
+    }
+    setLoading(false);
+  };
 
   const formatTransactionList = (transactions) => {
     return transactions.map((transaction) => ({
@@ -46,11 +51,21 @@ function MainPage(props) {
     navigate('send');
   };
 
+  const handleReloadTransactionHistory = async (e) => {
+    await getTransactionList();
+  };
+
   return (
     <Stack direction="column" justifyContent="center" spacing={10}>
-      <Button onClick={handleSendTransaction} variant="contained">
-        Go to Send Transaction Page
-      </Button>
+      <Stack direction="row" justifyContent="center" spacing={10}>
+        <Button onClick={handleSendTransaction} variant="contained">
+          Go to Send Transaction Page
+        </Button>
+        <Button variant="contained" color="secondary" onClick={handleReloadTransactionHistory}>
+          Reload Transaction History
+        </Button>
+      </Stack>
+
       <Typography align="center" variant="h5">
         Transaction history
       </Typography>
